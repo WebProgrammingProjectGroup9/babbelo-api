@@ -3,11 +3,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import * as dotenv from 'dotenv';
+import { ConfigModule } from '@nestjs/config';
 
 dotenv.config();
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: `.env.${process.env.NODE_ENV || 'development'}`,
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -18,8 +23,7 @@ dotenv.config();
       entities: [],
       synchronize: true,
       logging: true,
-      
-    })
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -34,5 +38,4 @@ export class AppModule {
       database: process.env.DB_DATABASE,
     });
   }
-  
 }
