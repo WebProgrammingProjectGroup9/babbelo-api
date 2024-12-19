@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { EventModule } from './event/event.module';
+import { Event } from './event/entities/event.entity';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -15,11 +17,12 @@ dotenv.config();
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [],
-      synchronize: true,
+      entities: [Event],
+      synchronize: true, // NIET GEBRUIKEN IN PRODUCTIE
       logging: true,
       
-    })
+    }),
+    EventModule
   ],
   controllers: [AppController],
   providers: [AppService],
