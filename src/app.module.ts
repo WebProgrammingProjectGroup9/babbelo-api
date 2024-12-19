@@ -5,6 +5,8 @@ import { AppService } from './app.service';
 import * as dotenv from 'dotenv';
 import { User } from './modules/user/entities/user.entity';
 import { UserModule } from './modules/user/user.module';
+import { AuthModule } from './auth/auth.module';
+
 
 dotenv.config();
 
@@ -22,7 +24,8 @@ dotenv.config();
       logging: true,
       
     }),
-    UserModule
+    UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
