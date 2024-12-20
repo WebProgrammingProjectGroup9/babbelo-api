@@ -7,7 +7,7 @@ import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.int
 
 async function bootstrap() {
   if (process.env.NODE_ENV !== 'production') {
-    config({ path: `.env` });
+    config({ path: `.env.dev` });
   }
 
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
