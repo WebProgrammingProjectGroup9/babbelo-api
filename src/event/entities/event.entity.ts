@@ -18,7 +18,7 @@ export class Event {
     description: string;
 
     @Column({ type: 'varchar', length: 255 })
-    photoUrl: string;
+    photo: string;
 
     // @ManyToOne(() => Account, account => account.events, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     // @JoinColumn({ name: 'AccountNumber' })
