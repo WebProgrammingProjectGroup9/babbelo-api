@@ -14,7 +14,6 @@ export class Event {
     @Column({ type: 'time' })
     time: string;
 
-
     @Column({type: 'varchar', length: 30})
     location: string;
 
