@@ -1,33 +1,32 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/modules/user/entities/user.entity';
 import { Repository } from 'typeorm';
-import { IUserCredentials, IUserIdentity } from './auth.interface';
+import { IAccountCredentials, IAccountIdentity } from './auth.interface';
+import { Account } from 'src/modules/account/entities/account.entity';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    @InjectRepository(User) private readonly userRepo: Repository<User>,
+    constructor( @InjectRepository(Account) private readonly accountRepo: Repository<Account>,
     private jwtService: JwtService,
   ) {}
 
-  async login(credentials: IUserCredentials): Promise<IUserIdentity> {
+  async login(credentials: IAccountCredentials): Promise<IAccountIdentity> {
     const { emailAddress, password } = credentials;
 
-    const user = await this.userRepo.findOne({
+    const account = await this.accountRepo.findOne({
       where: { emailAddress },
     });
 
-    if (user && user.password === credentials.password) {
+    if (account && account.password === credentials.password) {
       const payload = {
-        user_id: user.id,
+        account_id: account.id,
       };
 
       return {
-        id: user.id,
-        name: user.name,
-        emailAddress: user.emailAddress,
+        id: account.id,
+        name: account.name,
+        emailAddress: account.emailAddress,
         token: this.jwtService.sign(payload),
       };
     } else {

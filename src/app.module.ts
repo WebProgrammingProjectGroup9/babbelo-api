@@ -3,8 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import * as dotenv from 'dotenv';
-import { User } from './modules/user/entities/user.entity';
-import { UserModule } from './modules/user/user.module';
+import { Account } from './modules/account/entities/account.entity';
+import { AccountModule } from './modules/account/account.module';
 import { AuthModule } from './auth/auth.module';
 
 import { ConfigModule } from '@nestjs/config';
@@ -24,12 +24,12 @@ dotenv.config();
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [User],
+      entities: [Account],
       synchronize: true,
       logging: true,
       
     }),
-    UserModule,
+    AccountModule,
     AuthModule,
   ],
   controllers: [AppController],
@@ -37,8 +37,8 @@ dotenv.config();
 })
 export class AppModule {
   constructor() {
-    console.log({
-      type: process.env.DB_TYPE,
+    console.log("app module", {
+      type: "postgres",
       host: process.env.DB_HOST,
       port: process.env.DB_PORT,
       username: process.env.DB_USER,

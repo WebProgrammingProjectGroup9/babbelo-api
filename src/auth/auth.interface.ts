@@ -1,16 +1,16 @@
-export interface IUserCredentials {
+export interface IAccountCredentials {
     emailAddress: string;
     password: string;
 }
 
-export interface IUserIdentity {
+export interface IAccountIdentity {
     id: number,
     name: string;
     emailAddress: string;
     token?: string;
 }
 
-export interface IUserRegistration extends IUserCredentials {
+export interface IAccountRegistration extends IAccountCredentials {
     name: string;
 }
 
