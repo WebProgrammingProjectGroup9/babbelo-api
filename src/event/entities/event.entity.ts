@@ -1,30 +1,26 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+// import { Account } from './Account';
 @Entity('events')
 export class Event {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({type: 'varchar', length: 30})
+    @Column({ type: 'varchar', length: 30 })
     title: string;
 
     @Column({ type: 'date' })
-    date: Date
+    date: Date;
 
     @Column({ type: 'time' })
     time: string;
 
-    @Column({type: 'varchar', length: 30})
-    location: string;
-
-    @Column({type: 'varchar', length: 255})
+    @Column({ type: 'varchar', length: 255 })
     description: string;
 
-    @Column({type: 'varchar', length: 255})
-    photoUrl: string;y
+    @Column({ type: 'varchar', length: 255 })
+    photoUrl: string;
 
-
-    @Column({type: 'varchar', length: 30})
-    organistor: string;
-
+    // @ManyToOne(() => Account, account => account.events, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    // @JoinColumn({ name: 'AccountNumber' })
+    // organisator: Account;
 }
