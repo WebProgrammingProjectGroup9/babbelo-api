@@ -1,19 +1,25 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { config } from 'dotenv';
-import { DataSource } from 'typeorm';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+
 
 
 async function bootstrap() {
-  const environment = process.env.NODE_ENV || 'development';
-  config({ path: `.env` });
-  console.log(process.env);
-  console.log(`Running in ${process.env.NODE_ENV} mode`);
-  console.log(`Running in ${process.env.DB_HOST} datbase`);
+  if (process.env.NODE_ENV !== 'production') {
+    config({ path: `.env` });
+  }
 
-
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`Database Host: ${process.env.DB_HOST || 'Not Defined'}`);
 
   const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.PORT ?? 3000);
+  const corsOptions: CorsOptions = {};
+  app.enableCors(corsOptions);
+
+  //app.useGlobalInterceptors(new ApiResponseInterceptor());
+  const port = parseInt(process.env.PORT, 10) || 3100;
+  await app.listen(port);
+  console.log(`Application is running on: http://localhost:${port}`);
 }
 bootstrap();
