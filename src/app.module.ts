@@ -14,7 +14,7 @@ dotenv.config();
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: process.env.NODE_ENV === 'development' ? `.env.dev` : undefined,
+      envFilePath: process.env.NODE_ENV === 'development' ? `.env` : undefined,
       isGlobal: true,
     }),
     TypeOrmModule.forRoot({

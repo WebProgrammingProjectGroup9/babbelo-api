@@ -6,9 +6,9 @@ import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.int
 
 
 async function bootstrap() {
-  if (process.env.NODE_ENV !== 'production') {
-    config({ path: `.env` });
-  }
+  // if (process.env.NODE_ENV !== 'production') {
+  //   config({ path: `.env` });
+  // }
 
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`Database Host: ${process.env.DB_HOST || 'Not Defined'}`);
