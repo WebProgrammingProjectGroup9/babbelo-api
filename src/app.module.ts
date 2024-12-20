@@ -18,16 +18,11 @@ dotenv.config();
       isGlobal: true,
     }),
     TypeOrmModule.forRoot({
-      type: "postgres",
-      host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT),
-      username: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_DATABASE,
+      type: 'postgres',
+      url: process.env.DATABASE_URL,
       entities: [Account],
       synchronize: true,
       logging: true,
-      
     }),
     AccountModule,
     AuthModule,
@@ -39,11 +34,7 @@ export class AppModule {
   constructor() {
     console.log("app module", {
       type: "postgres",
-      host: process.env.DB_HOST,
-      port: process.env.DB_PORT,
-      password: process.env.DB_PASSWORD,
-      username: process.env.DB_USER,
-      database: process.env.DB_DATABASE,
+      url: process.env.DATABASE_URL,
     });
   }
 }
