@@ -2,14 +2,13 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { EventModule } from './event/event.module';
-import { Event } from './event/entities/event.entity';
-import * as dotenv from 'dotenv';
+import { EventModule } from './modules/event/event.module';
+import { Event } from './modules/event/entities/event.entity';
 import { Account } from './modules/account/entities/account.entity';
 import { AccountModule } from './modules/account/account.module';
 import { AuthModule } from './auth/auth.module';
-
 import { ConfigModule } from '@nestjs/config';
+import * as dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -22,12 +21,13 @@ dotenv.config();
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: [Account],
+      entities: [Account, Event],
       synchronize: true,
       logging: true,
     }),
     AccountModule,
     AuthModule,
+    EventModule
   ],
   controllers: [AppController],
   providers: [AppService],
