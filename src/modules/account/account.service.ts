@@ -11,13 +11,12 @@ export class AccountService {
 
     async getAccount(id: number): Promise<AccountDto> {
         const account = await this.accountRepo.findOne({ where: { id } });
-        return { name: account.name, emailAddress: account.emailAddress };
+        return { firstName: account.firstName, lastName: account.lastName, emailAddress: account.emailAddress };
       }
 
       async getAll(): Promise<AccountDto[]> {
         const accounts = await this.accountRepo.find();
-
-        return accounts.map((accounts) => ({ name: accounts.name, emailAddress: accounts.emailAddress }));
+        return accounts.map((account) => ({ firstName: account.firstName, lastName: account.lastName, emailAddress: account.emailAddress }));
       }
 
     

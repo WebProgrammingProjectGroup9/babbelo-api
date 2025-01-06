@@ -3,7 +3,11 @@ import { IsString, IsEmail, IsNotEmpty } from 'class-validator';
 export class AccountDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  firstName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  lastName: string;
 
   @IsEmail()
   emailAddress: string;

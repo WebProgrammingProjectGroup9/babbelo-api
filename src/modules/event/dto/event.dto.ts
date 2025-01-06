@@ -1,7 +1,7 @@
 import { Account } from "../../account/entities/account.entity";
 
 export class CreateEventDto {
-    readonly eventNumber: number;
+    readonly id: number;
     readonly title: string;
     readonly date: Date;
     readonly time: string;

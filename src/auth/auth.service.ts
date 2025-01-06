@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Account } from 'src/modules/account/entities/account.entity';
-import { AccountCredentialsDto, AccountIdentityDto } from './auth.dto';
+import { IAccountCredentials, IAccountIdentity, IAccountRegistration } from './auth.interface';
 
 
 @Injectable()
@@ -12,7 +12,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(credentials: AccountCredentialsDto): Promise<AccountIdentityDto> {
+  async login(credentials: IAccountCredentials): Promise<IAccountIdentity> {
     const { emailAddress, password } = credentials;
 
     const account = await this.accountRepo.findOne({
@@ -26,7 +26,8 @@ export class AuthService {
 
       return {
         id: account.id,
-        name: account.name,
+        firstName: account.firstName,
+        lastName: account.lastName,
         emailAddress: account.emailAddress,
         token: this.jwtService.sign(payload),
       };
@@ -34,5 +35,17 @@ export class AuthService {
       const errMsg = 'Email not found or password invalid';
       throw new UnauthorizedException(errMsg);
     }
+  }
+
+  async register(credentials: IAccountRegistration): Promise<IAccountIdentity> {
+    const {emailAddress, firstName, lastName, password} = credentials
+
+    const accountCheck = await this.accountRepo.find({ where: { emailAddress } });
+    if (accountCheck.length > 0) {
+      console.log(accountCheck);
+      throw new Error('This email address already exists');
+    }
+    const account = await this.accountRepo.save(credentials);
+    return account;
   }
 }

@@ -40,14 +40,14 @@ export class EventService {
     return events;
   }
 
-  async findOne(eventNumber: number) {
-    const event = await this.eventRepository.findOne({ where: { eventNumber } });
+  async findOne(id: number) {
+    const event = await this.eventRepository.findOne({ where: { id } });
 
     if (!event) {
       throw new BadRequestException('Event not found');
     }
     
-    this.logger.debug(`Finding event with id ${eventNumber}`);
+    this.logger.debug(`Finding event with id ${id}`);
 
     return event;
    
@@ -55,7 +55,7 @@ export class EventService {
 
   async update(req: any, id: number, updateEventDto: CreateEventDto) {
     const event = await this.eventRepository.findOne({
-      where: { eventNumber: id },
+      where: { id },
       relations: ['organisator'],
     });
 
@@ -67,7 +67,7 @@ export class EventService {
       throw new BadRequestException('Date cannot be in the past');
     }
 
-    if (event.eventNumber !== id) {
+    if (event.id !== id) {
       throw new NotFoundException('Event does not exist');
     }
 
@@ -82,11 +82,11 @@ export class EventService {
 
   async remove(req: any, id: number) {
     const event = await this.eventRepository.findOne({
-      where: { eventNumber: id },
+      where: { id },
       relations: ['organisator'],
     })
 
-    if(event.eventNumber !== id) {
+    if(event.id !== id) {
       throw new NotFoundException('Event does not exist');
     }
 

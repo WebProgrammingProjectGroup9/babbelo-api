@@ -4,7 +4,7 @@ import { Account } from '../../account/entities/account.entity';
 @Entity('events')
 export class Event {
     @PrimaryGeneratedColumn('increment')
-    eventNumber: number;
+    id: number;
 
     @Column({ type: 'varchar', length: 30 })
     title: string;
@@ -13,7 +13,10 @@ export class Event {
     date: Date;
 
     @Column({ type: 'time' })
-    time: string;
+    startTime: string;
+
+    @Column({ type: 'time' })
+    endTime: string;
 
     @Column({ type: 'varchar', length: 255 })
     category: string;
