@@ -1,4 +1,5 @@
-import { IsString, IsEmail, IsNotEmpty } from 'class-validator';
+import { IsString, IsEmail, IsNotEmpty, IsOptional, IsDataURI, IsDate, IsEnum } from 'class-validator';
+import { Gender } from './entities/account.entity';
 
 export class AccountDto {
   @IsString()
@@ -11,5 +12,41 @@ export class AccountDto {
 
   @IsEmail()
   emailAddress: string;
+
+}
+
+export class UpdateAccountDto {
+  @IsOptional()
+  @IsString()
+  firstName: string;
+
+  @IsOptional()
+  @IsString()
+  lastName: string;
+
+  @IsOptional()
+  @IsString()
+  @IsEmail()
+  emailAddress: string;
+
+  @IsOptional()
+  @IsDate()
+  dateOfBirth: Date;
+
+  @IsOptional()
+  @IsEnum(Gender)
+  gender: Gender;
+
+  @IsOptional()
+  @IsString()
+  phoneNumber: string;
+
+  @IsOptional()
+  @IsString()
+  profileImgUrl: string;
+
+  @IsOptional()
+  @IsString()
+  biography: string;
 
 }
