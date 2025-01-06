@@ -15,8 +15,8 @@ export class Account {
     @Column({ type: 'varchar', length: 255})
     password: string;
 
-    @OneToMany(() => Event, event => event.organisator)
-    @ManyToMany(() => Event, event => event.participants)
-    @Column({ type: 'varchar', length: 255})
+    @OneToMany(() => Event, event => event.organisator, {nullable: true})
+    @ManyToMany(() => Event, event => event.participants, {nullable: true})
+    @Column({ type: 'varchar', length: 255, nullable: true})
     events: Event[];
 }
