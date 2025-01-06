@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, ManyToMany } from 'typeorm';
 import { Account } from '../../account/entities/account.entity';
 
 @Entity('events')
@@ -29,5 +29,13 @@ export class Event {
 
     @ManyToOne(() => Account, account => account.events)
     @JoinColumn({ name: 'id' })  
+    @Column({ type: 'varchar', length: 255 })
     organisator: Account;
+
+    @ManyToMany(() => Account, account => account.events)
+    @JoinColumn({ name: 'id' })
+    @Column({ type: 'varchar', length: 255 })
+    participants: Account[];
+
+
 }

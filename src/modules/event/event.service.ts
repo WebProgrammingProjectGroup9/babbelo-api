@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, NotFoundException, Injectable, Logger } from '@nestjs/common';
 import { CreateEventDto } from './dto/event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Event } from './entities/event.entity';
@@ -30,13 +30,27 @@ export class EventService {
   }
 
   async findAll(): Promise<Event[]> {
-    return await this.eventRepository.find();
-  
+    this.logger.debug('Finding all events');
+    const events = await this.eventRepository.find();
+
+    if (events.length === 0) {
+      throw new BadRequestException('No events found');
+    }
+
+    return events;
   }
 
   async findOne(eventNumber: number) {
+    const event = await this.eventRepository.findOne({ where: { eventNumber } });
+
+    if (!event) {
+      throw new BadRequestException('Event not found');
+    }
+    
     this.logger.debug(`Finding event with id ${eventNumber}`);
-    return await this.eventRepository.findOne({ where: { eventNumber } });
+
+    return event;
+   
   }
 
   async update(req: any, id: number, updateEventDto: CreateEventDto) {
@@ -47,6 +61,14 @@ export class EventService {
 
     if(!event) {
       throw new BadRequestException('Event not found');
+    }
+
+    if (new Date(updateEventDto.date) < new Date()) {
+      throw new BadRequestException('Date cannot be in the past');
+    }
+
+    if (event.eventNumber !== id) {
+      throw new NotFoundException('Event does not exist');
     }
 
     if (event.organisator.id !== req.user.account_id) {
@@ -64,8 +86,12 @@ export class EventService {
       relations: ['organisator'],
     })
 
+    if(event.eventNumber !== id) {
+      throw new NotFoundException('Event does not exist');
+    }
+
     if(!event) {
-      throw new BadRequestException('Event not found');
+      throw new NotFoundException('Event not found');
     }
 
     if (event.organisator.id !== req.user.account_id) {

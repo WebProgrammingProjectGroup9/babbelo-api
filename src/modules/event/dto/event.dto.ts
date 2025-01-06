@@ -1,6 +1,6 @@
 import { Account } from "../../account/entities/account.entity";
 
-export class CreateEventDto{
+export class CreateEventDto {
     readonly eventNumber: number;
     readonly title: string;
     readonly date: Date;
@@ -11,3 +11,7 @@ export class CreateEventDto{
     readonly information: string;
     readonly organisator: Account;
 }
+
+
+
+
