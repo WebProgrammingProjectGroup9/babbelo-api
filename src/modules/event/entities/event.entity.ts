@@ -37,7 +37,7 @@ export class Event {
 
     @ManyToMany(() => Account, account => account.events)
     @JoinColumn({ name: 'id' })
-    @Column({ type: 'varchar', length: 255 })
+    @Column({ type: 'varchar', length: 255, nullable: true })
     participants: Account[];
 
 
