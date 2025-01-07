@@ -24,7 +24,7 @@ export class Event {
     @Column({ type: 'varchar', length: 255 })
     description: string;
 
-    @Column({ type: 'varchar', length: 255 })
+    @Column({ type: 'varchar', length: 255, nullable: true })
     photo: string;
 
     @Column({ type: 'varchar', length: 255 })
