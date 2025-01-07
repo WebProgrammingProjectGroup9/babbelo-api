@@ -31,8 +31,7 @@ export class Event {
     information: string;
 
     @ManyToOne(() => Account, account => account.organizedEvents)
-    @JoinColumn({ name: 'id' })  
-    @Column({ type: 'varchar', length: 255 })
+    @JoinColumn({ name: 'organisator' })
     organisator: Account;
 
     @ManyToMany(() => Account, account => account.participatingEvents)

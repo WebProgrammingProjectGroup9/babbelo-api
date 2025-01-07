@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, Put } from '@nestjs/common';
 import { EventService } from './event.service';
-import { CreateEventDto } from './dto/event.dto';
+import { EventDto, UpdateEventDto } from './dto/event.dto';
 import { AuthGuard } from '../../auth/auth.guards';
 
 @Controller('event')
@@ -9,7 +9,7 @@ export class EventController {
 
   @Post()
   @UseGuards(AuthGuard)
-  create(@Request() req: any,@Body() createEventDto: CreateEventDto) {
+  create(@Request() req: any,@Body() createEventDto: EventDto) {
     return this.eventService.create(req, createEventDto);
   }
 
@@ -33,7 +33,7 @@ export class EventController {
 
   @Put(':id')
   @UseGuards(AuthGuard)
-  update(@Request() req: any, @Param('id') id: number, @Body() updateEventDto: CreateEventDto) {
+  update(@Request() req: any, @Param('id') id: number, @Body() updateEventDto: UpdateEventDto) {
     return this.eventService.update(req, id, updateEventDto);
   }
   @Delete(':id')

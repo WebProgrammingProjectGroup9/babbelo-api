@@ -1,5 +1,5 @@
 import { BadRequestException, NotFoundException, Injectable, Logger } from '@nestjs/common';
-import { CreateEventDto } from './dto/event.dto';
+import { EventDto, UpdateEventDto } from './dto/event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Event } from './entities/event.entity';
 import { Repository } from 'typeorm';
@@ -15,7 +15,7 @@ export class EventService {
     this.logger.debug(this.eventRepository.metadata)
   }
 
-  async create(req: any, createEventDto: CreateEventDto) {
+  async create(req: any, createEventDto: EventDto) {
     const userId = req.user.account_id;
     const { date } = createEventDto;
 
@@ -60,7 +60,7 @@ export class EventService {
     return event;
   }
 
-  async update(req: any, id: number, updateEventDto: CreateEventDto) {
+  async update(req: any, id: number, updateEventDto: UpdateEventDto) {
     const event = await this.eventRepository.findOne({
       where: { id },
       relations: ['organisator'],
