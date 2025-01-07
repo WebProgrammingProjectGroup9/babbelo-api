@@ -25,6 +25,12 @@ export class EventController {
     return this.eventService.findOne(+id);
   }
 
+  @Get(':id/participants')
+  @UseGuards(AuthGuard)
+  findParticipants(@Param('id') id: string){
+    return this.eventService.findParticipants(+id);
+  }
+
   @Put(':id')
   @UseGuards(AuthGuard)
   update(@Request() req: any, @Param('id') id: number, @Body() updateEventDto: CreateEventDto) {

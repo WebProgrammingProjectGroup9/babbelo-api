@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Event } from "../../event/entities/event.entity";
 
 export enum Gender {
@@ -39,8 +39,14 @@ export class Account {
     @Column({ type: 'varchar', length: 255, nullable: true})
     biography: string;
 
-    @OneToMany(() => Event, event => event.organisator, {nullable: true})
-    @ManyToMany(() => Event, event => event.participants, {nullable: true})
-    @Column({ type: 'varchar', length: 255, nullable: true})
-    events: Event[];
+    @OneToMany(() => Event, event => event.organisator, { nullable: true })
+    organizedEvents: Event[];
+  
+    @ManyToMany(() => Event, event => event.participants)
+    @JoinTable({
+      name: 'event_participants',
+      joinColumn: { name: 'account_id', referencedColumnName: 'id' },
+      inverseJoinColumn: { name: 'event_id', referencedColumnName: 'id' },
+    })
+    participatingEvents: Event[];
 }

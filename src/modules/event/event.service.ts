@@ -42,7 +42,6 @@ export class EventService {
 
   async findOne(id: number) {
     const event = await this.eventRepository.findOne({ where: { id } });
-
     if (!event) {
       throw new BadRequestException('Event not found');
     }
@@ -51,6 +50,14 @@ export class EventService {
 
     return event;
    
+  }
+
+  async findParticipants(id: number) {
+    const event = await this.eventRepository.findOne({  
+      where: { id },
+      relations: ['participants'],
+    });
+    return event;
   }
 
   async update(req: any, id: number, updateEventDto: CreateEventDto) {
