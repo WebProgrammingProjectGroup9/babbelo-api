@@ -24,15 +24,14 @@ export class Event {
     @Column({ type: 'text' })
     description: string;
 
-    @Column({ type: 'varchar', length: 255 })
+    @Column({ type: 'varchar', length: 255, nullable: true })
     photo: string;
 
     @Column({ type: 'text' })
     information: string;
 
     @ManyToOne(() => Account, account => account.organizedEvents)
-    @JoinColumn({ name: 'id' })  
-    @Column({ type: 'varchar', length: 255 })
+    @JoinColumn({ name: 'organisator' })
     organisator: Account;
 
     @ManyToMany(() => Account, account => account.participatingEvents)
