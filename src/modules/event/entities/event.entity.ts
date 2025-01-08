@@ -21,13 +21,13 @@ export class Event {
     @Column({ type: 'varchar', length: 255 })
     category: string;
 
-    @Column({ type: 'varchar', length: 255 })
+    @Column({ type: 'text' })
     description: string;
 
     @Column({ type: 'varchar', length: 255 })
     photo: string;
 
-    @Column({ type: 'varchar', length: 255 })
+    @Column({ type: 'text' })
     information: string;
 
     @ManyToOne(() => Account, account => account.organizedEvents)

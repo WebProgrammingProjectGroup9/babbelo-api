@@ -13,6 +13,9 @@ export class AccountDto {
   @IsEmail()
   emailAddress: string;
 
+  @IsString()
+  profileImgUrl: string;
+
 }
 
 export class UpdateAccountDto {

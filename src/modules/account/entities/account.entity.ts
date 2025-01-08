@@ -12,31 +12,31 @@ export class Account {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ type: 'varchar', length: 255})
+    @Column({ type: 'varchar', length: 30})
     firstName: string;
 
-    @Column({ type: 'varchar', length: 255})
+    @Column({ type: 'varchar', length: 30})
     lastName: string;
 
     @Column({ type: 'date'})
     dateOfBirth: Date;
 
-    @Column({ type: 'varchar', length: 255})
+    @Column({ type: 'varchar', length: 10})
     gender: Gender;
 
-    @Column({type: 'varchar', length: 255})
+    @Column({type: 'varchar', length: 12})
     phoneNumber: string;
 
-    @Column({ type: 'varchar', length: 255, unique: true})
+    @Column({ type: 'varchar', length: 50, unique: true})
     emailAddress: string;
 
-    @Column({ type: 'varchar', length: 255})
+    @Column({ type: 'varchar', length: 50})
     password: string;
 
     @Column({ type: 'varchar', length: 255, nullable: true})
     profileImgUrl: string;
 
-    @Column({ type: 'varchar', length: 255, nullable: true})
+    @Column({ type: 'text', nullable: true})
     biography: string;
 
     @OneToMany(() => Event, event => event.organisator, { nullable: true })
