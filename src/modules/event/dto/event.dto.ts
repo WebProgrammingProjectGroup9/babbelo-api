@@ -33,6 +33,7 @@ export class EventDto {
     @IsNotEmpty()
     information: string;
 
+    @IsNotEmpty()
     organisator: Account;
 }
 

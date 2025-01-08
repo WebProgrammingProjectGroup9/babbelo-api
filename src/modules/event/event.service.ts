@@ -36,28 +36,28 @@ export class EventService {
     if (events.length === 0) {
       throw new BadRequestException('No events found');
     }
-
+    
     return events;
   }
 
   async findOne(id: number) {
-    const event = await this.eventRepository.findOne({ where: { id } });
+    const event = await this.eventRepository.findOne({ where: { id }, relations: ['organisator']});
     if (!event) {
       throw new BadRequestException('Event not found');
     }
     
     this.logger.debug(`Finding event with id ${id}`);
-
-    return event;
+    console.log(event);
+    return {...event , organisator: event.organisator.id};
    
   }
 
   async findParticipants(id: number) {
     const event = await this.eventRepository.findOne({  
       where: { id },
-      relations: ['participants'],
+      relations: ['participants', 'organisator'],
     });
-    return event;
+    return {...event, organisator: event.organisator.id};
   }
 
   async update(req: any, id: number, updateEventDto: UpdateEventDto) {
