@@ -36,9 +36,17 @@ export class EventController {
   update(@Request() req: any, @Param('id') id: number, @Body() updateEventDto: UpdateEventDto) {
     return this.eventService.update(req, id, updateEventDto);
   }
+
   @Delete(':id')
   @UseGuards(AuthGuard)
   remove(@Request() req: any, @Param('id') id: number) {
     return this.eventService.remove(req, id);
+  }
+
+  @Post(':id/join')
+  @UseGuards(AuthGuard)
+  async joinEvent(@Request() req: any, @Param('id') eventId: number) {
+    const userId = req.user.account_id;
+    return await this.eventService.joinEvent(userId, eventId);
   }
 }
