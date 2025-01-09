@@ -34,7 +34,7 @@ export class EventService {
     const events = await this.eventRepository.find();
 
     if (events.length === 0) {
-      throw new BadRequestException('No events found');
+      return [];
     }
     
     return events;
@@ -43,7 +43,11 @@ export class EventService {
   async findOne(id: number) {
     const event = await this.eventRepository.findOne({ where: { id }, relations: ['organisator']});
     if (!event) {
-      throw new BadRequestException('Event not found');
+      return [];
+    }
+    
+    if (event.id !== id) {
+      throw new NotFoundException('Event does not exist');
     }
     
     this.logger.debug(`Finding event with id ${id}`);
