@@ -5,13 +5,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Event } from './entities/event.entity';
 import { AuthModule } from '../../auth/auth.module';
 import { JwtModule, JwtService } from '@nestjs/jwt';
-
+import { Account } from '../account/entities/account.entity';
 
 @Module({
   imports: [
     AuthModule,
     JwtModule,
-    TypeOrmModule.forFeature([Event]), 
+    TypeOrmModule.forFeature([Event, Account]), 
 
   ],
   controllers: [EventController],

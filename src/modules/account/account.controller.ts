@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Put, UseGuards } from '@nestjs/common';
 import { AccountService } from './account.service';
 import { AuthGuard } from 'src/auth/auth.guards';
-import { UpdateAccountDto } from './account.dto';
+import { UpdateAccountDto } from './dto/account.dto';
 
 
 @UseGuards(AuthGuard)

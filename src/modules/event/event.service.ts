@@ -3,6 +3,7 @@ import { EventDto, UpdateEventDto } from './dto/event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Event } from './entities/event.entity';
 import { Repository } from 'typeorm';
+import { Account } from '../account/entities/account.entity';
 
 @Injectable()
 export class EventService {
@@ -11,6 +12,8 @@ export class EventService {
   constructor(
     @InjectRepository(Event) 
     private readonly eventRepository: Repository<Event>,
+    @InjectRepository(Account)
+    private readonly accountRepository: Repository<Account>,
   ){
     this.logger.debug(this.eventRepository.metadata)
   }
@@ -114,4 +117,30 @@ export class EventService {
     return { deleted: response.affected}
 
   }
+
+  async joinEvent(userId: number, eventId: number) {
+    const event = await this.eventRepository.findOne({
+        where: { id: eventId },
+        relations: ['participants'],
+    });
+
+    if (!event) {
+        throw new NotFoundException('Event not found');
+    }
+
+    const isAlreadyParticipant = event.participants.some((participant) => participant.id === userId);
+    if (isAlreadyParticipant) {
+        throw new BadRequestException('User is already a participant');
+    }
+
+    const user = await this.accountRepository.findOne({ where: { id: userId } });
+    if (!user) {
+        throw new NotFoundException('User not found');
+    }
+
+    event.participants.push(user);
+    await this.eventRepository.save(event);
+
+    return { message: 'Successfully joined the event', event };
+}
 }

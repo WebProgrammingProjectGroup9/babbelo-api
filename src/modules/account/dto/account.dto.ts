@@ -1,5 +1,5 @@
 import { IsString, IsEmail, IsNotEmpty, IsOptional, IsDataURI, IsDate, IsEnum } from 'class-validator';
-import { Gender } from './entities/account.entity';
+import { Gender } from '../entities/account.entity';
 
 export class AccountDto {
   @IsString()
