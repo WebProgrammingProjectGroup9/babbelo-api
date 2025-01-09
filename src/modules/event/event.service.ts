@@ -33,33 +33,36 @@ export class EventService {
   }
 
   async findAll(): Promise<Event[]> {
-    this.logger.debug('Finding all events');
-    const events = await this.eventRepository.find();
-
-    if (events.length === 0) {
-      return [];
-    }
+      this.logger.debug('Finding all events');
+      
+        const events = await this.eventRepository.find({
+        relations: ['participants', 'organisator'], 
+      });
     
-    return events;
-  }
+      if (events.length === 0) {
+        return [];
+      }
+    
+      return events;
+    }
 
   async findOne(id: number) {
-    const event = await this.eventRepository.findOne({ where: { id }, relations: ['organisator']});
-    if (!event) {
-      return [];
-    }
+      const event = await this.eventRepository.findOne({
+        where: { id },
+        relations: ['organisator', 'participants'],
+      });
     
-    if (event.id !== id) {
-      throw new NotFoundException('Event does not exist');
-    }
+      if (!event) {
+        throw new NotFoundException('Event does not exist');
+      }
     
-    this.logger.debug(`Finding event with id ${id}`);
-    console.log(event);
-    return {...event , organisator: event.organisator.id};
-   
-  }
+      this.logger.debug(`Finding event with id ${id}`);
+      console.log(event);
+    
+      return event;
+    }
 
-  async findParticipants(id: number) {
+    async findParticipants(id: number) {
     const event = await this.eventRepository.findOne({  
       where: { id },
       relations: ['participants', 'organisator'],
