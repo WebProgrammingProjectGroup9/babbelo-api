@@ -2,6 +2,9 @@ import { IsString, IsEmail, IsNotEmpty, IsOptional, IsDataURI, IsDate, IsEnum } 
 import { Gender } from '../entities/account.entity';
 
 export class AccountDto {
+  @IsNotEmpty()
+  _id: number;
+
   @IsString()
   @IsNotEmpty()
   firstName: string;
@@ -10,12 +13,27 @@ export class AccountDto {
   @IsNotEmpty()
   lastName: string;
 
+  @IsDate()
+  @IsNotEmpty()
+  dateOfBirth: Date;
+
+  @IsEnum(Gender)
+  @IsNotEmpty()
+  gender: Gender;
+
+  @IsString()
+  @IsNotEmpty()
+  phoneNumber: string;
+
   @IsEmail()
+  @IsNotEmpty()
   emailAddress: string;
 
   @IsString()
   profileImgUrl: string;
 
+  @IsString()
+  biography: string;
 }
 
 export class UpdateAccountDto {

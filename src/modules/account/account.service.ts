@@ -17,10 +17,15 @@ export class AccountService {
       throw new BadRequestException('Account not found');
     }
     const accountDto: AccountDto = {
+      _id: account.id,
       firstName: account.firstName,
       lastName: account.lastName,
       emailAddress: account.emailAddress,
       profileImgUrl: account.profileImgUrl,
+      dateOfBirth: account.dateOfBirth,
+      gender: account.gender,
+      phoneNumber: account.phoneNumber,
+      biography: account.biography,
     };
 
     return accountDto;
@@ -32,10 +37,15 @@ export class AccountService {
       throw new BadRequestException('No accounts found');
     }
     return accounts.map((account) => ({
+      _id: account.id,
       firstName: account.firstName,
       lastName: account.lastName,
       emailAddress: account.emailAddress,
       profileImgUrl: account.profileImgUrl,
+      dateOfBirth: account.dateOfBirth,
+      gender: account.gender,
+      phoneNumber: account.phoneNumber,
+      biography: account.biography,
     }));
   }
 

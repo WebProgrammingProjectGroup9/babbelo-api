@@ -1,8 +1,7 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Put, UseGuards, Request } from '@nestjs/common';
 import { AccountService } from './account.service';
 import { AuthGuard } from 'src/auth/auth.guards';
 import { UpdateAccountDto } from './dto/account.dto';
-
 
 @UseGuards(AuthGuard)
 @Controller('account')
@@ -13,6 +12,12 @@ export class AccountController {
     @Get()
     async getAll() {
         return this.accountService.findAll();
+    }
+
+    @Get('profile')
+    @UseGuards(AuthGuard)
+    async getProfile(@Request() req: any) {
+      return await this.accountService.findOne(req.user.account_id);
     }
     
     @Get(':id')
@@ -29,8 +34,4 @@ export class AccountController {
     async delete(@Param('id') id: number) {
       return await this.accountService.delete(id)
     }
-
-    
-
-
 }
