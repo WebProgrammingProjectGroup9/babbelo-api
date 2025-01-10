@@ -41,21 +41,21 @@ export class AuthService {
   }
 
   async register(credentials: IAccountRegistration): Promise<IAccountIdentity> {
-    const { emailAddress, firstName, lastName, password, ZipCode, StreetName, HouseNumber, City } = credentials;
+    const { emailAddress, firstName, lastName, password, zipCode, StreetName, HouseNumber, City } = credentials;
 
     const accountCheck = await this.accountRepo.findOne({ where: { emailAddress } });
     if (accountCheck) {
       throw new BadRequestException('This email address is already in use');
     }
 
-    const addressCheck = await this.addressRepo.findOne({ where: { ZipCode, StreetName, HouseNumber, City } });
+    const addressCheck = await this.addressRepo.findOne({ where: { zipCode, StreetName, HouseNumber, City } });
     let savedAddress: Address;
 
     if (addressCheck) {
       savedAddress = addressCheck;
     } else {
       const address = new Address();
-      address.ZipCode = ZipCode;
+      address.zipCode = zipCode;
       address.StreetName = StreetName;
       address.HouseNumber = HouseNumber;
       address.City = City;

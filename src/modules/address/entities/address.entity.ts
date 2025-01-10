@@ -8,7 +8,7 @@ export class Address {
     id: number;
 
     @Column({ type: 'varchar', length: 6})
-    ZipCode: string;
+    zipCode: string;
 
     @Column({ type: 'varchar', length: 50})
     StreetName: string;

@@ -23,7 +23,7 @@ export class IAccountRegistration extends IAccountCredentials {
     chamberOfCommerce?: string;
     website?: string;
 
-    ZipCode: string;
+    zipCode: string;
     StreetName: string;
     HouseNumber: number;
     City: string;

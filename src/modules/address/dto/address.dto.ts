@@ -6,7 +6,7 @@ export class CreateAddressDto {
 
     @IsNotEmpty()
     @IsString()
-    ZipCode: string;
+    zipCode: string;
 
     @IsNotEmpty()
     @IsString()
