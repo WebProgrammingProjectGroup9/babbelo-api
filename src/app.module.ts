@@ -5,6 +5,8 @@ import { AppService } from './app.service';
 import { EventModule } from './modules/event/event.module';
 import { Event } from './modules/event/entities/event.entity';
 import { Account } from './modules/account/entities/account.entity';
+import { Address } from './modules/address/entities/address.entity';
+import { AddressModule } from './modules/address/address.module';
 import { AccountModule } from './modules/account/account.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
@@ -21,12 +23,13 @@ dotenv.config();
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: [Account, Event],
+      entities: [Account, Event, Address],
       synchronize: true,
       logging: true,
     }),
     AccountModule,
     AuthModule,
+    AddressModule,
     EventModule
   ],
   controllers: [AppController],

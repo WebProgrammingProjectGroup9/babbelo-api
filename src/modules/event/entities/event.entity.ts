@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
 import { Account } from '../../account/entities/account.entity';
+import { Address } from 'src/modules/address/entities/address.entity';
 
 @Entity('events')
 export class Event {
@@ -42,5 +43,7 @@ export class Event {
     })
     participants: Account[];
 
-
+    @ManyToOne(() => Address, address => address.events)
+    @JoinTable()
+    address: Address;
 }

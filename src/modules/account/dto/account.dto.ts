@@ -34,6 +34,15 @@ export class AccountDto {
 
   @IsString()
   biography: string;
+
+  @IsString()
+  organisationName: string;
+
+  @IsString()
+  chamberOfCommerce: string;
+
+  @IsString()
+  website: string;
 }
 
 export class UpdateAccountDto {
