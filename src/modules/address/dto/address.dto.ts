@@ -10,13 +10,13 @@ export class CreateAddressDto {
 
     @IsNotEmpty()
     @IsString()
-    StreetName: string;
+    streetName: string;
 
     @IsNotEmpty()
     @IsInt()
-    HouseNumber: number;
+    houseNumber: number;
 
     @IsNotEmpty()
     @IsString()
-    City: string;
+    city: string;
 }

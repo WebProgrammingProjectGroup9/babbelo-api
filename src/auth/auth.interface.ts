@@ -24,9 +24,9 @@ export class IAccountRegistration extends IAccountCredentials {
     website?: string;
 
     zipCode: string;
-    StreetName: string;
-    HouseNumber: number;
-    City: string;
+    streetName: string;
+    houseNumber: number;
+    city: string;
 }
 
 export class Token {

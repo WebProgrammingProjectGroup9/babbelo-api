@@ -11,13 +11,13 @@ export class Address {
     zipCode: string;
 
     @Column({ type: 'varchar', length: 50})
-    StreetName: string;
+    streetName: string;
 
     @Column({ type: 'varchar', length: 10})
-    HouseNumber: number;
+    houseNumber: number;
     
     @Column({ type: 'varchar', length: 50})
-    City: string;
+    city: string;
 
     @OneToMany(() => Event, event => event.address)
     events: Event[];
