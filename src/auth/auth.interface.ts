@@ -19,6 +19,14 @@ export class IAccountRegistration extends IAccountCredentials {
     dateOfBirth: Date;
     gender: Gender;
     phoneNumber: string;
+    organisationName?: string;
+    chamberOfCommerce?: string;
+    website?: string;
+
+    ZipCode: string;
+    StreetName: string;
+    HouseNumber: number;
+    City: string;
 }
 
 export class Token {

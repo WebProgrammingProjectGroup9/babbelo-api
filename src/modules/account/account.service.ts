@@ -26,6 +26,9 @@ export class AccountService {
       gender: account.gender,
       phoneNumber: account.phoneNumber,
       biography: account.biography,
+      organisationName: account.organisationName,
+      chamberOfCommerce: account.chamberOfCommerce,
+      website: account.website,
     };
 
     return accountDto;
@@ -46,6 +49,9 @@ export class AccountService {
       gender: account.gender,
       phoneNumber: account.phoneNumber,
       biography: account.biography,
+      organisationName: account.organisationName,
+      chamberOfCommerce: account.chamberOfCommerce,
+      website: account.website,
     }));
   }
 
