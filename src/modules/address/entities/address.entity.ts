@@ -13,7 +13,7 @@ export class Address {
     @Column({ type: 'varchar', length: 50})
     StreetName: string;
 
-    @Column({ type: 'int'})
+    @Column({ type: 'varchar', length: 10})
     HouseNumber: number;
     
     @Column({ type: 'varchar', length: 50})
