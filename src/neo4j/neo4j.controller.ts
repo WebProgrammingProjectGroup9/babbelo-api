@@ -6,7 +6,7 @@ export class Neo4jController {
   constructor(private readonly neo4jService: Neo4jService) {}
 
   @Post('create')
-  async create(@Body() body: { id: string }) {
+  async create(@Body() body: { id: number }) {
     const { id } = body;
     return this.neo4jService.create(id);
   }

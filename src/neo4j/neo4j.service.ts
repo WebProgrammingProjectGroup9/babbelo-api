@@ -5,7 +5,7 @@ import { Session } from 'neo4j-driver';
 export class Neo4jService {
   constructor(@Inject('NEO4J_SESSION') private readonly session: Session) {}
 
-  async create(id: string) {
+  async create(id: number) {
     try {
       const result = await this.session.run(
         'CREATE (n:Person {id: $id}) RETURN n',

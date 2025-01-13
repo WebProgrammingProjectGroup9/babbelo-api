@@ -1,6 +1,7 @@
 import { Module, Global } from '@nestjs/common';
 import { ConfigService, ConfigModule } from '@nestjs/config';
 import * as neo4j from 'neo4j-driver';
+import { Neo4jService } from './neo4j.service';
 
 @Global()
 @Module({
@@ -35,7 +36,8 @@ import * as neo4j from 'neo4j-driver';
       },
       inject: ['NEO4J_DRIVER', ConfigService],
     },
+    Neo4jService,
   ],
-  exports: ['NEO4J_DRIVER', 'NEO4J_SESSION'],
+  exports: ['NEO4J_DRIVER', 'NEO4J_SESSION', Neo4jService],
 })
 export class Neo4jModule {}
