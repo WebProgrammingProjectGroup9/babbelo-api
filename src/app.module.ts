@@ -10,6 +10,9 @@ import { AddressModule } from './modules/address/address.module';
 import { AccountModule } from './modules/account/account.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { Neo4jModule } from './neo4j/neo4j.module';
+import { Neo4jService } from './neo4j/neo4j.service';
+import { Neo4jController } from './neo4j/neo4j.controller';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -30,10 +33,11 @@ dotenv.config();
     AccountModule,
     AuthModule,
     AddressModule,
-    EventModule
+    EventModule,
+    Neo4jModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, Neo4jController],
+  providers: [AppService, Neo4jService],
 })
 export class AppModule {
   constructor() {
