@@ -10,4 +10,10 @@ export class Neo4jController {
     const { id } = body;
     return this.neo4jService.create(id);
   }
+
+  @Post('friends')
+  async friends(@Body() body: { id1: number, id2: number }) {
+    const { id1, id2 } = body;
+    return this.neo4jService.friends(id1, id2);
+  }
 }
