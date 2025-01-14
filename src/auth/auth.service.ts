@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Account } from 'src/modules/account/entities/account.entity';
 import { Address } from 'src/modules/address/entities/address.entity';
 import { IAccountCredentials, IAccountIdentity, IAccountRegistration } from './auth.interface';
+import { Neo4jService } from 'src/neo4j/neo4j.service';
 
 
 @Injectable()
@@ -13,6 +14,7 @@ export class AuthService {
     @InjectRepository(Account) private readonly accountRepo: Repository<Account>,
     @InjectRepository(Address) private readonly addressRepo: Repository<Address>,
     private jwtService: JwtService,
+    private neo4jService: Neo4jService,
   ) {}
 
   async login(credentials: IAccountCredentials): Promise<IAccountIdentity> {
@@ -84,7 +86,8 @@ export class AuthService {
     }
 
     const savedAccount = await this.accountRepo.save(account);
-
+    
+    this.neo4jService.create(savedAccount.id);
     const payload = { account_id: savedAccount.id };
     const token = this.jwtService.sign(payload);
 
