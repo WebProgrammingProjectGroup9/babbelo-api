@@ -25,9 +25,8 @@ export class EventDto {
     @IsString()
     description: string;
 
-    @IsString()
     @IsOptional()
-    photo: string;
+    photo: Buffer;
 
     @IsString()
     @IsNotEmpty()
@@ -59,8 +58,7 @@ export class UpdateEventDto {
     description: string;
 
     @IsOptional()
-    @IsString()
-    photo: string;
+    photo: Buffer;
 
     @IsOptional()
     @IsString()

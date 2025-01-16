@@ -29,8 +29,8 @@ export class AccountDto {
   @IsNotEmpty()
   emailAddress: string;
 
-  @IsString()
-  profileImgUrl: string;
+  @IsOptional()
+  profileImgUrl: Buffer;
 
   @IsString()
   biography: string;
@@ -72,8 +72,7 @@ export class UpdateAccountDto {
   phoneNumber: string;
 
   @IsOptional()
-  @IsString()
-  profileImgUrl: string;
+  profileImgUrl: Buffer;
 
   @IsOptional()
   @IsString()
