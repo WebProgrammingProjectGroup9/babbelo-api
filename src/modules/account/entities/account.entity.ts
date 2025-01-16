@@ -34,7 +34,7 @@ export class Account {
     @Column({ type: 'varchar', length: 50})
     password: string;
 
-    @Column({ type: 'bytea', length: 255, nullable: true})
+    @Column({ type: 'bytea', nullable: true})
     profileImgUrl: Buffer;
 
     @Column({ type: 'text', nullable: true})

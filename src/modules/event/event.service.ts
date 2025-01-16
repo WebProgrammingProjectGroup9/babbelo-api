@@ -146,4 +146,33 @@ export class EventService {
 
     return { message: 'Successfully joined the event', event };
 }
+
+async getTimeline(userId: number) {
+  console.log('userId', userId);
+
+  const user = await this.accountRepository.findOne({ where: { id: userId } });
+  if (!user) {
+    throw new NotFoundException('User not found');
+  }
+
+  const organizedEvents = await this.eventRepository.find({
+    where: { organisator: user },
+    relations: ['participants', 'organisator'],
+  });
+
+  const participatedEvents = await this.eventRepository
+    .createQueryBuilder('event')
+    .leftJoinAndSelect('event.participants', 'participant')
+    .leftJoinAndSelect('event.organisator', 'organisator')
+    .where('participant.id = :userId', { userId })
+    .getMany();
+
+    const allEvents = [...organizedEvents, ...participatedEvents];
+
+    const uniqueEvents = Array.from(
+      new Map(allEvents.map((event) => [event.id, event])).values()
+    );
+
+    return uniqueEvents;
+  }
 }
