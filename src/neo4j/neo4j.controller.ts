@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { Neo4jService } from './neo4j.service';
 
 @Controller('neo4j')
@@ -36,5 +36,17 @@ export class Neo4jController {
   async friend(@Body() body: { id1: number, id2: number }) {
     const { id1, id2 } = body;
     return this.neo4jService.friend(id1, id2);
+  }
+
+  @Post('deny')
+  async deny(@Body() body: { id1: number, id2: number }) {
+    const { id1, id2 } = body;
+    return this.neo4jService.deny(id1, id2);
+  }
+
+  @Delete('unfriend')
+  async unfriend(@Body() body: { id1: number, id2: number }) {
+    const { id1, id2 } = body;
+    return this.neo4jService.unfriend(id1, id2);
   }
 }

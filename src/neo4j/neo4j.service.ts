@@ -88,5 +88,33 @@ async getRequest(id: number) {
         console.error('Error creating friendship:', error);
         throw error;
     }
-}
+    }
+
+    async deny(id1: number, id2: number) {
+        try {
+            const result = await this.session.run(
+                `MATCH (a:Person {id: $id1})-[r:REQUEST]->(b:Person {id: $id2})
+                 DELETE r`,
+                { id1, id2 }
+            );
+            return result;
+        } catch (error) {
+            console.error('Error denying request:', error);
+            throw error;
+        }
+    }
+
+    async unfriend(id1: number, id2: number) {
+        try {
+            const result = await this.session.run(
+                `MATCH (a:Person {id: $id1})-[r:FRIEND]-(b:Person {id: $id2})
+                 DELETE r`,
+                { id1, id2 }
+            );
+            return result;
+        } catch (error) {
+            console.error('Error unfriending:', error);
+            throw error;
+        }
+    }
 }
