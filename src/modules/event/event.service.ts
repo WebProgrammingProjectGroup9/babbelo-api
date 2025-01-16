@@ -152,29 +152,59 @@ async getTimeline(userId: number) {
 
   const user = await this.accountRepository.findOne({ where: { id: userId } });
   if (!user) {
-    throw new NotFoundException('User not found');
+      throw new NotFoundException('User not found');
   }
 
   const organizedEvents = await this.eventRepository.find({
-    where: { organisator: user },
-    relations: ['participants', 'organisator'],
+    where: { organisator: { id: userId } },
+    relations: ['organisator', 'participants', 'address'],
   });
 
   const participatedEvents = await this.eventRepository
     .createQueryBuilder('event')
     .leftJoinAndSelect('event.participants', 'participant')
     .leftJoinAndSelect('event.organisator', 'organisator')
+    .leftJoinAndSelect('event.address', 'address')
     .where('participant.id = :userId', { userId })
     .getMany();
+    const allParticipants = await this.eventRepository
+      .createQueryBuilder('event')
+      .leftJoinAndSelect('event.participants', 'participant')
+      .leftJoinAndSelect('event.organisator', 'organisator')
+      .leftJoinAndSelect('event.address', 'address')
+      .getMany();
 
-    const allEvents = [...organizedEvents, ...participatedEvents];
+    const participatedEventsWithAllParticipants = participatedEvents.map(event => {
+      const fullEvent = allParticipants.find(e => e.id === event.id);
+      return fullEvent ? { ...event, participants: fullEvent.participants } : event;
+    });
 
-    const uniqueEvents = Array.from(
+  const allEvents = [...organizedEvents, ...participatedEventsWithAllParticipants];
+
+  const uniqueEvents = Array.from(
       new Map(allEvents.map((event) => [event.id, event])).values()
-    );
+  );
 
-    return uniqueEvents;
-  }
+  return uniqueEvents.map((event) => ({
+      ...event,
+      participants: event.participants?.map((participant) => ({
+        _id: participant.id,
+        firstName: participant.firstName,
+        lastName: participant.lastName,
+        emailAddress: participant.emailAddress,
+        profileImgUrl: participant.profileImgUrl,
+        dateOfBirth: participant.dateOfBirth,
+        gender: participant.gender,
+        phoneNumber: participant.phoneNumber,
+        biography: participant.biography,
+        organisationName: participant.organisationName,
+        chamberOfCommerce: participant.chamberOfCommerce,
+        website: participant.website,
+        address: participant.address,
+      })),
+  }));
+}
+
 
   async getSwipe(userId: number) {
     const user = await this.accountRepository.findOne({ where: { id: userId } });
