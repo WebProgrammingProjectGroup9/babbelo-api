@@ -175,4 +175,21 @@ async getTimeline(userId: number) {
 
     return uniqueEvents;
   }
+
+  async getSwipe(userId: number) {
+    const user = await this.accountRepository.findOne({ where: { id: userId } });
+  if (!user) {
+    throw new NotFoundException('User not found');
+  }
+
+  const swipeableEvents = await this.eventRepository
+    .createQueryBuilder('event')
+    .leftJoinAndSelect('event.participants', 'participant')
+    .leftJoinAndSelect('event.organisator', 'organisator')
+    .where('participant.id != :userId OR participant.id IS NULL', { userId })
+    .andWhere('organisator.id != :userId', { userId })
+    .getMany();
+
+  return swipeableEvents;
+  }
 }

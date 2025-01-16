@@ -16,7 +16,7 @@ export class IAccountIdentity {
 export class IAccountRegistration extends IAccountCredentials {
     firstName: string;
     lastName: string;
-    dateOfBirth: Date;
+    dateOfBirth?: Date;
     gender: Gender;
     phoneNumber: string;
     organisationName?: string;

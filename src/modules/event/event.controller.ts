@@ -39,6 +39,11 @@ export class EventController {
     return await this.eventService.getTimeline(+id);
   }
 
+  @Get('swipe/:id')
+  @UseGuards(AuthGuard)
+  async getSwipe(@Param('id') id: string) {
+    return await this.eventService.getSwipe(+id);
+  }
 
   @Put(':id')
   @UseGuards(AuthGuard)
