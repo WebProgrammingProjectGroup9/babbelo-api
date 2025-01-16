@@ -19,10 +19,10 @@ export class Event {
     @Column({ type: 'time' })
     endTime: string;
 
-    @Column({ type: 'varchar', length: 255 })
+    @Column({ type: 'text' })
     category: string;
 
-    @Column({ type: 'text' })
+    @Column({ type: 'varchar', length: 75 })
     description: string;
 
     @Column({ type: 'text', nullable: true })
