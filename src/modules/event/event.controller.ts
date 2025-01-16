@@ -1,10 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, Put, Logger } from '@nestjs/common';
 import { EventService } from './event.service';
 import { EventDto, UpdateEventDto } from './dto/event.dto';
 import { AuthGuard } from '../../auth/auth.guards';
 
 @Controller('event')
 export class EventController {
+  private readonly logger: Logger = new Logger(EventController.name);
+
   constructor(private readonly eventService: EventService) {}
 
   @Post()
@@ -30,6 +32,13 @@ export class EventController {
   findParticipants(@Param('id') id: string){
     return this.eventService.findParticipants(+id);
   }
+
+  @Get('timeline/:id')
+  @UseGuards(AuthGuard)
+  async getTimeline(@Param('id') id: string) {
+    return await this.eventService.getTimeline(+id);
+  }
+
 
   @Put(':id')
   @UseGuards(AuthGuard)
