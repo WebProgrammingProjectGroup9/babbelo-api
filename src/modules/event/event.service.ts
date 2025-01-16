@@ -36,7 +36,7 @@ export class EventService {
       this.logger.debug('Finding all events');
       
         const events = await this.eventRepository.find({
-        relations: ['participants', 'organisator'], 
+        relations: ['participants', 'organisator', 'address'], 
       });
     
       if (events.length === 0) {
@@ -49,7 +49,7 @@ export class EventService {
   async findOne(id: number) {
       const event = await this.eventRepository.findOne({
         where: { id },
-        relations: ['organisator', 'participants'],
+        relations: ['organisator', 'participants', 'address'],
       });
     
       if (!event) {
@@ -60,7 +60,7 @@ export class EventService {
       console.log(event);
     
       return event;
-    }
+  }
 
     async findParticipants(id: number) {
     const event = await this.eventRepository.findOne({  
