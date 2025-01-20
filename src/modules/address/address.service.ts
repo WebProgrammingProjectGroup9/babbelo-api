@@ -32,7 +32,6 @@ export class AddressService {
         }
 
         this.logger.debug(`Finding address with id ${id}`);
-        console.log(address);
         return address;
     }
 }

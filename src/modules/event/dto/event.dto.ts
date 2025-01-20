@@ -26,7 +26,7 @@ export class EventDto {
     description: string;
 
     @IsOptional()
-    photo: Buffer;
+    photo: string;
 
     @IsString()
     @IsNotEmpty()

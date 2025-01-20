@@ -21,7 +21,7 @@ export class AccountService {
       firstName: account.firstName,
       lastName: account.lastName,
       emailAddress: account.emailAddress,
-      profileImgUrl: account.profileImgUrl,
+      profileImgUrl: null,
       dateOfBirth: account.dateOfBirth,
       gender: account.gender,
       phoneNumber: account.phoneNumber,
@@ -30,6 +30,11 @@ export class AccountService {
       chamberOfCommerce: account.chamberOfCommerce,
       website: account.website,
     };
+    if (account.profileImgUrl) {
+      const base64Photo = account.profileImgUrl.toString('base64');
+      accountDto['photoBase64'] = `data:image/jpeg;base64,${base64Photo}`;
+    }
+
 
     return accountDto;
   }
@@ -39,12 +44,26 @@ export class AccountService {
     if (!accounts) {
       throw new BadRequestException('No accounts found');
     }
-    return accounts.map((account) => ({
+    accounts.map((account) => {
+      if (account.profileImgUrl) {
+        const base64Photo = account.profileImgUrl.toString('base64');
+        account['photoBase64'] = `data:image/jpeg;base64,${base64Photo}`;
+      }
+    })
+
+    return accounts.map((account) => {
+      let photoBase64: string | null = null;
+      if (account.profileImgUrl) {
+        const base64Photo = Buffer.from(account.profileImgUrl).toString('base64');
+        photoBase64 = `data:image/jpeg;base64,${base64Photo}`;
+      }
+      return {
       _id: account.id,
       firstName: account.firstName,
       lastName: account.lastName,
       emailAddress: account.emailAddress,
-      profileImgUrl: account.profileImgUrl,
+      photoBase64: photoBase64,
+      profileImgUrl: null,
       dateOfBirth: account.dateOfBirth,
       gender: account.gender,
       phoneNumber: account.phoneNumber,
@@ -52,11 +71,13 @@ export class AccountService {
       organisationName: account.organisationName,
       chamberOfCommerce: account.chamberOfCommerce,
       website: account.website,
-    }));
-  }
+      address: account.address,
+      
+  }});
+};
+  
 
   async update(id: number, update: UpdateAccountDto) {
-    console.log(update);
     return await this.accountRepo.update(id, update);
   }
 
