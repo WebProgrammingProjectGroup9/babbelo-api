@@ -19,7 +19,7 @@ export class Account {
     @Column({ type: 'varchar', length: 30})
     lastName: string;
 
-    @Column({ type: 'date'})
+    @Column({ type: 'date', nullable: true})
     dateOfBirth: Date;
 
     @Column({ type: 'varchar', length: 10})

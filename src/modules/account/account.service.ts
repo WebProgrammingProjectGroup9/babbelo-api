@@ -13,7 +13,10 @@ export class AccountService {
   ) {}
 
   async findOne(id: number): Promise<AccountDto> {
-    const account = await this.accountRepo.findOne({ where: { id } });
+    const account = await this.accountRepo.findOne({ 
+      where: { id },
+      relations: ['address'],
+    });
     if (!account) {
       throw new BadRequestException('Account not found');
     }
@@ -30,13 +33,17 @@ export class AccountService {
       organisationName: account.organisationName,
       chamberOfCommerce: account.chamberOfCommerce,
       website: account.website,
+      address: account.address,
     };
 
     return accountDto;
   }
 
   async findAll(): Promise<AccountDto[]> {
-    const accounts = await this.accountRepo.find();
+    const accounts = await this.accountRepo.find({
+      relations: ['address'],
+    }
+    );
     if (!accounts) {
       throw new BadRequestException('No accounts found');
     }

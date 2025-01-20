@@ -14,7 +14,6 @@ export class AccountDto {
   lastName: string;
 
   @IsDate()
-  @IsNotEmpty()
   dateOfBirth: Date;
 
   @IsEnum(Gender)
@@ -43,6 +42,8 @@ export class AccountDto {
 
   @IsString()
   website: string;
+
+  address: any;
 }
 
 export class UpdateAccountDto {
@@ -77,5 +78,5 @@ export class UpdateAccountDto {
   @IsOptional()
   @IsString()
   biography: string;
-
+  address: any;
 }

@@ -163,6 +163,7 @@ export class EventService {
 }
 
 async getTimeline(userId: number) {
+  console.log('userId', userId);
 
   const user = await this.accountRepository.findOne({ where: { id: userId } });
   if (!user) {
@@ -206,7 +207,7 @@ async getTimeline(userId: number) {
         firstName: participant.firstName,
         lastName: participant.lastName,
         emailAddress: participant.emailAddress,
-        profileImgUrl: util.getPhoto(participant.profileImgUrl),
+        profileImgUrl: participant.profileImgUrl,
         dateOfBirth: participant.dateOfBirth,
         gender: participant.gender,
         phoneNumber: participant.phoneNumber,
@@ -254,14 +255,13 @@ async getTimeline(userId: number) {
     });
 
       return swipeableEvents.map((event) => ({
-        ...event = util.transformPhotos(event),
-  
+        ...event,
         participants: event.participants?.map((participant) => ({
           _id: participant.id,
           firstName: participant.firstName,
           lastName: participant.lastName,
           emailAddress: participant.emailAddress,
-          profileImgUrl: util.getPhoto(participant.profileImgUrl),
+          profileImgUrl: participant.profileImgUrl,
           dateOfBirth: participant.dateOfBirth,
           gender: participant.gender,
           phoneNumber: participant.phoneNumber,
