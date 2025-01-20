@@ -212,14 +212,50 @@ async getTimeline(userId: number) {
     throw new NotFoundException('User not found');
   }
 
-  const swipeableEvents = await this.eventRepository
+  const allEvents = await this.eventRepository
     .createQueryBuilder('event')
     .leftJoinAndSelect('event.participants', 'participant')
     .leftJoinAndSelect('event.organisator', 'organisator')
-    .where('participant.id != :userId OR participant.id IS NULL', { userId })
+    .leftJoinAndSelect('event.address', 'address')
+    .where('participant.id IS NULL OR participant.id != :userId', { userId })
     .andWhere('organisator.id != :userId', { userId })
     .getMany();
 
-  return swipeableEvents;
+  const allParticipants = await this.eventRepository
+    .createQueryBuilder('event')
+    .leftJoinAndSelect('event.participants', 'participant')
+    .leftJoinAndSelect('event.organisator', 'organisator')
+    .leftJoinAndSelect('event.address', 'address')
+    .getMany();
+
+    const allEventsWithParticipants = allEvents.map(event => {
+      const fullEvent = allParticipants.find(e => e.id === event.id);
+      return fullEvent ? { ...event, participants: fullEvent.participants } : event;
+    });
+
+    const swipeableEvents = allEventsWithParticipants.filter((event) => {
+      const isOrganizer = event.organisator?.id === userId;
+      const isParticipant = event.participants?.some((participant) => participant.id === userId);
+      return !isOrganizer && !isParticipant;
+    });
+
+      return swipeableEvents.map((event) => ({
+        ...event,
+        participants: event.participants?.map((participant) => ({
+          _id: participant.id,
+          firstName: participant.firstName,
+          lastName: participant.lastName,
+          emailAddress: participant.emailAddress,
+          profileImgUrl: participant.profileImgUrl,
+          dateOfBirth: participant.dateOfBirth,
+          gender: participant.gender,
+          phoneNumber: participant.phoneNumber,
+          biography: participant.biography,
+          organisationName: participant.organisationName,
+          chamberOfCommerce: participant.chamberOfCommerce,
+          website: participant.website,
+          address: participant.address,
+        })),
+    }));
   }
 }
