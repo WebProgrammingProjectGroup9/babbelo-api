@@ -3,6 +3,7 @@ import { Account } from './entities/account.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AccountDto, UpdateAccountDto } from './dto/account.dto';
+import { util } from 'src/util/util';
 
 @Injectable()
 export class AccountService {
@@ -21,7 +22,7 @@ export class AccountService {
       firstName: account.firstName,
       lastName: account.lastName,
       emailAddress: account.emailAddress,
-      profileImgUrl: null,
+      profileImgUrl: util.getPhoto(account.profileImgUrl),
       dateOfBirth: account.dateOfBirth,
       gender: account.gender,
       phoneNumber: account.phoneNumber,
@@ -30,11 +31,6 @@ export class AccountService {
       chamberOfCommerce: account.chamberOfCommerce,
       website: account.website,
     };
-    if (account.profileImgUrl) {
-      const base64Photo = account.profileImgUrl.toString('base64');
-      accountDto['photoBase64'] = `data:image/jpeg;base64,${base64Photo}`;
-    }
-
 
     return accountDto;
   }
@@ -44,26 +40,15 @@ export class AccountService {
     if (!accounts) {
       throw new BadRequestException('No accounts found');
     }
-    accounts.map((account) => {
-      if (account.profileImgUrl) {
-        const base64Photo = account.profileImgUrl.toString('base64');
-        account['photoBase64'] = `data:image/jpeg;base64,${base64Photo}`;
-      }
-    })
 
     return accounts.map((account) => {
-      let photoBase64: string | null = null;
-      if (account.profileImgUrl) {
-        const base64Photo = Buffer.from(account.profileImgUrl).toString('base64');
-        photoBase64 = `data:image/jpeg;base64,${base64Photo}`;
-      }
+
       return {
       _id: account.id,
       firstName: account.firstName,
       lastName: account.lastName,
       emailAddress: account.emailAddress,
-      photoBase64: photoBase64,
-      profileImgUrl: null,
+      profileImgUrl: util.getPhoto(account.profileImgUrl),
       dateOfBirth: account.dateOfBirth,
       gender: account.gender,
       phoneNumber: account.phoneNumber,
