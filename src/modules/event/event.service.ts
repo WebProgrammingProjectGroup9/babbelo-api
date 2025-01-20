@@ -195,12 +195,14 @@ async getTimeline(userId: number) {
     });
 
   const allEvents = [...organizedEvents, ...participatedEventsWithAllParticipants];
-
+  
   const uniqueEvents = Array.from(
       new Map(allEvents.map((event) => [event.id, event])).values()
   );
 
-  return uniqueEvents.map((event) => ({
+  const transformedEvents = util.transformPhotos(uniqueEvents)
+
+  return transformedEvents.map((event) => ({
       ...event,
       participants: event.participants?.map((participant) => ({
         _id: participant.id,
@@ -253,8 +255,9 @@ async getTimeline(userId: number) {
       const isParticipant = event.participants?.some((participant) => participant.id === userId);
       return !isOrganizer && !isParticipant;
     });
+    const transformedEvents = util.transformPhotos(swipeableEvents);
 
-      return swipeableEvents.map((event) => ({
+      return transformedEvents.map((event) => ({
         ...event,
         participants: event.participants?.map((participant) => ({
           _id: participant.id,
