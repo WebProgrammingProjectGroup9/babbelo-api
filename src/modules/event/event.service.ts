@@ -36,7 +36,7 @@ export class EventService {
       this.logger.debug('Finding all events');
       
         const events = await this.eventRepository.find({
-        relations: ['participants', 'organisator'], 
+        relations: ['participants', 'organisator', 'address'], 
       });
     
       if (events.length === 0) {
@@ -49,7 +49,7 @@ export class EventService {
   async findOne(id: number) {
       const event = await this.eventRepository.findOne({
         where: { id },
-        relations: ['organisator', 'participants'],
+        relations: ['organisator', 'participants', 'address'],
       });
     
       if (!event) {
@@ -60,7 +60,7 @@ export class EventService {
       console.log(event);
     
       return event;
-    }
+  }
 
     async findParticipants(id: number) {
     const event = await this.eventRepository.findOne({  
@@ -146,4 +146,116 @@ export class EventService {
 
     return { message: 'Successfully joined the event', event };
 }
+
+async getTimeline(userId: number) {
+  console.log('userId', userId);
+
+  const user = await this.accountRepository.findOne({ where: { id: userId } });
+  if (!user) {
+      throw new NotFoundException('User not found');
+  }
+
+  const organizedEvents = await this.eventRepository.find({
+    where: { organisator: { id: userId } },
+    relations: ['organisator', 'participants', 'address'],
+  });
+
+  const participatedEvents = await this.eventRepository
+    .createQueryBuilder('event')
+    .leftJoinAndSelect('event.participants', 'participant')
+    .leftJoinAndSelect('event.organisator', 'organisator')
+    .leftJoinAndSelect('event.address', 'address')
+    .where('participant.id = :userId', { userId })
+    .getMany();
+    const allParticipants = await this.eventRepository
+      .createQueryBuilder('event')
+      .leftJoinAndSelect('event.participants', 'participant')
+      .leftJoinAndSelect('event.organisator', 'organisator')
+      .leftJoinAndSelect('event.address', 'address')
+      .getMany();
+
+    const participatedEventsWithAllParticipants = participatedEvents.map(event => {
+      const fullEvent = allParticipants.find(e => e.id === event.id);
+      return fullEvent ? { ...event, participants: fullEvent.participants } : event;
+    });
+
+  const allEvents = [...organizedEvents, ...participatedEventsWithAllParticipants];
+
+  const uniqueEvents = Array.from(
+      new Map(allEvents.map((event) => [event.id, event])).values()
+  );
+
+  return uniqueEvents.map((event) => ({
+      ...event,
+      participants: event.participants?.map((participant) => ({
+        _id: participant.id,
+        firstName: participant.firstName,
+        lastName: participant.lastName,
+        emailAddress: participant.emailAddress,
+        profileImgUrl: participant.profileImgUrl,
+        dateOfBirth: participant.dateOfBirth,
+        gender: participant.gender,
+        phoneNumber: participant.phoneNumber,
+        biography: participant.biography,
+        organisationName: participant.organisationName,
+        chamberOfCommerce: participant.chamberOfCommerce,
+        website: participant.website,
+        address: participant.address,
+      })),
+  }));
+}
+
+
+  async getSwipe(userId: number) {
+    const user = await this.accountRepository.findOne({ where: { id: userId } });
+  if (!user) {
+    throw new NotFoundException('User not found');
+  }
+
+  const allEvents = await this.eventRepository
+    .createQueryBuilder('event')
+    .leftJoinAndSelect('event.participants', 'participant')
+    .leftJoinAndSelect('event.organisator', 'organisator')
+    .leftJoinAndSelect('event.address', 'address')
+    .where('participant.id IS NULL OR participant.id != :userId', { userId })
+    .andWhere('organisator.id != :userId', { userId })
+    .getMany();
+
+  const allParticipants = await this.eventRepository
+    .createQueryBuilder('event')
+    .leftJoinAndSelect('event.participants', 'participant')
+    .leftJoinAndSelect('event.organisator', 'organisator')
+    .leftJoinAndSelect('event.address', 'address')
+    .getMany();
+
+    const allEventsWithParticipants = allEvents.map(event => {
+      const fullEvent = allParticipants.find(e => e.id === event.id);
+      return fullEvent ? { ...event, participants: fullEvent.participants } : event;
+    });
+
+    const swipeableEvents = allEventsWithParticipants.filter((event) => {
+      const isOrganizer = event.organisator?.id === userId;
+      const isParticipant = event.participants?.some((participant) => participant.id === userId);
+      return !isOrganizer && !isParticipant;
+    });
+
+      return swipeableEvents.map((event) => ({
+        ...event,
+        participants: event.participants?.map((participant) => ({
+          _id: participant.id,
+          firstName: participant.firstName,
+          lastName: participant.lastName,
+          emailAddress: participant.emailAddress,
+          profileImgUrl: participant.profileImgUrl,
+          dateOfBirth: participant.dateOfBirth,
+          gender: participant.gender,
+          phoneNumber: participant.phoneNumber,
+          biography: participant.biography,
+          organisationName: participant.organisationName,
+          chamberOfCommerce: participant.chamberOfCommerce,
+          website: participant.website,
+          address: participant.address,
+        })),
+    }));
+  }
 }

@@ -52,7 +52,7 @@ async getRequest(id: number) {
   async create(id: number) {
     try {
       const result = await this.session.run(
-        'CREATE (n:Person {id: $id}) RETURN n',
+        'MERGE (n:Person {id: $id}) RETURN n',
         { id }
       );
       return result;

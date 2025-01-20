@@ -19,7 +19,7 @@ export class Account {
     @Column({ type: 'varchar', length: 30})
     lastName: string;
 
-    @Column({ type: 'date'})
+    @Column({ type: 'date', nullable: true})
     dateOfBirth: Date;
 
     @Column({ type: 'varchar', length: 10})
@@ -34,7 +34,7 @@ export class Account {
     @Column({ type: 'varchar', length: 50})
     password: string;
 
-    @Column({ type: 'bytea', length: 255, nullable: true})
+    @Column({ type: 'bytea', nullable: true})
     profileImgUrl: Buffer;
 
     @Column({ type: 'text', nullable: true})
