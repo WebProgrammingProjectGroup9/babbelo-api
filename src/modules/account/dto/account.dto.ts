@@ -29,7 +29,7 @@ export class AccountDto {
   emailAddress: string;
 
   @IsOptional()
-  profileImgUrl: Buffer;
+  profileImgUrl: string;
 
   @IsString()
   biography: string;
