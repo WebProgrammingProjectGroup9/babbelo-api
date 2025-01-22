@@ -18,7 +18,7 @@ export class AccountController {
     async getProfile(@Request() req: any) {
       return await this.accountService.findOne(req.user.account_id);
     }
-    
+  
     @Get(':id')
     async getAccount(@Param('id') id: number) {
       return await this.accountService.findOne(id);
