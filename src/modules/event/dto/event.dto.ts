@@ -3,37 +3,54 @@ import { Account } from "../../account/entities/account.entity";
 import { Transform } from "class-transformer";
 
 export class EventDto {
-    id: number;
-    
-    @IsString()
-    @IsNotEmpty()
-    title: string;
-    @IsDate()
-    @IsNotEmpty()
-    @Transform(({ value }) => new Date(value))
-    date: Date;
+  id: number;
 
-    @IsNotEmpty()
-    @IsString()
-    time: string;
+  @IsString()
+  @IsNotEmpty()
+  title: string;
 
-    @IsNotEmpty()
-    @IsString()
-    category: string;
+  @IsDate()
+  @IsNotEmpty()
+  @Transform(({ value }) => new Date(value))
+  date: Date;
 
-    @IsNotEmpty()
-    @IsString()
-    description: string;
+  @IsNotEmpty()
+  @IsString()
+  time: string;
 
-    @IsOptional()
-    photo: Buffer;
+  @IsNotEmpty()
+  @IsString()
+  category: string;
 
-    @IsString()
-    @IsNotEmpty()
-    information: string;
+  @IsNotEmpty()
+  @IsString()
+  description: string;
 
-    @IsNotEmpty()
-    organisator: Account;
+  @IsOptional()
+  photo: Buffer;
+
+  @IsString()
+  @IsNotEmpty()
+  information: string;
+
+  @IsNotEmpty()
+  organisator: Account;
+
+  @IsString()
+  @IsNotEmpty()
+  zipCode: string;
+
+  @IsString()
+  @IsNotEmpty()
+  streetName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  houseNumber: string;
+
+  @IsString()
+  @IsNotEmpty()
+  city: string;
 }
 
 export class UpdateEventDto {

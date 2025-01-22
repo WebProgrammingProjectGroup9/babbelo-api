@@ -2,8 +2,9 @@ import { BadRequestException, NotFoundException, Injectable, Logger } from '@nes
 import { EventDto, UpdateEventDto } from './dto/event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Event } from './entities/event.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Account } from '../account/entities/account.entity';
+import { Address } from '../address/entities/address.entity';
 
 @Injectable()
 export class EventService {
@@ -14,23 +15,64 @@ export class EventService {
     private readonly eventRepository: Repository<Event>,
     @InjectRepository(Account)
     private readonly accountRepository: Repository<Account>,
+    @InjectRepository(Address)
+    private readonly addressRepo: Repository<Address>,
   ){
     this.logger.debug(this.eventRepository.metadata)
   }
 
-  async create(req: any, createEventDto: EventDto) {
-    const userId = req.user.account_id;
-    const { date } = createEventDto;
-
+  async create(req: any, createEventDto: EventDto): Promise<Event> {
+    const {
+      date,
+      zipCode,
+      streetName,
+      houseNumber,
+      city,
+      ...eventDetails
+    } = createEventDto;
+  
+    // Ensure the date is in the future
     if (new Date(date) < new Date()) {
       throw new BadRequestException('Date cannot be in the past');
     }
-    console.log('userId', userId);  
-
-    const newEvent = { ...createEventDto, organisator: userId };
-
-    return await this.eventRepository.save(newEvent);
+  
+    const userId = req.user.account_id;
+  
+    // Check if the address exists
+    const addressCheck = await this.addressRepo.findOne({
+      where: { zipCode, streetName, houseNumber: Number(houseNumber), city },
+    });
+  
+    let savedAddress: Address;
+  
+    if (addressCheck) {
+      savedAddress = addressCheck;
+    } else {
+      const address = new Address();
+      address.zipCode = zipCode;
+      address.streetName = streetName;
+      address.houseNumber = Number(houseNumber);
+      address.city = city;
+  
+      savedAddress = await this.addressRepo.save(address);
+    }
+  
+    // Create and save the event
+    const event = new Event();
+    event.date = date;
+    event.address = savedAddress;
+    const organisator = await this.accountRepository.findOne({ where: { id: userId } });
+    if (!organisator) {
+      throw new NotFoundException('Organisator not found');
+    }
+    event.organisator = organisator;
+    Object.assign(event, eventDetails);
+  
+    const savedEvent = await this.eventRepository.save(event);
+  
+    return savedEvent;
   }
+  
 
   async findAll(): Promise<Event[]> {
       this.logger.debug('Finding all events');
