@@ -32,6 +32,7 @@ export class EventService {
       streetName,
       houseNumber,
       city,
+      photo,
       ...eventDetails
     } = createEventDto;
   
@@ -39,48 +40,68 @@ export class EventService {
     if (new Date(date) < new Date()) {
       throw new BadRequestException('Date cannot be in the past');
     }
+  
     let photoBuffer = null;
-    if (createEventDto.photo) {
-      const base64Data = createEventDto.photo.replace(/^data:image\/jpeg;base64,/, '');
-       photoBuffer = Buffer.from(base64Data, 'base64');
+  
+    // Process photo if provided
+    if (photo) {
+      try {
+        const base64Data = photo.replace(/^data:image\/\w+;base64,/, '');
+        photoBuffer = Buffer.from(base64Data, 'base64');
+      } catch (error) {
+        throw new BadRequestException('Invalid photo format');
+      }
     }
-
+  
     const userId = req.user.account_id;
   
     // Check if the address exists
-    const addressCheck = await this.addressRepo.findOne({
-      where: { zipCode, streetName, houseNumber: Number(houseNumber), city },
-    });
-  
     let savedAddress: Address;
+    try {
+      const addressCheck = await this.addressRepo.findOne({
+        where: { zipCode, streetName, houseNumber: Number(houseNumber), city },
+      });
   
-    if (addressCheck) {
-      savedAddress = addressCheck;
-    } else {
-      const address = new Address();
-      address.zipCode = zipCode;
-      address.streetName = streetName;
-      address.houseNumber = Number(houseNumber);
-      address.city = city;
+      if (addressCheck) {
+        savedAddress = addressCheck;
+      } else {
+        const address = new Address();
+        address.zipCode = zipCode;
+        address.streetName = streetName;
+        address.houseNumber = Number(houseNumber);
+        address.city = city;
   
-      savedAddress = await this.addressRepo.save(address);
+        savedAddress = await this.addressRepo.save(address);
+      }
+    } catch (error) {
+      throw new BadRequestException('Failed to handle the address');
     }
   
     // Create and save the event
     const event = new Event();
     event.date = date;
     event.address = savedAddress;
+  
     const organisator = await this.accountRepository.findOne({ where: { id: userId } });
     if (!organisator) {
       throw new NotFoundException('Organisator not found');
     }
     event.organisator = organisator;
+  
+    // Assign additional details to the event
     Object.assign(event, eventDetails);
+    if (photoBuffer) {
+      event.photo = photoBuffer; // Assuming the `photo` field in Event entity can handle binary data
+    }
   
-    const savedEvent = await this.eventRepository.save(event);
-  
-    return savedEvent;
+    try {
+      const savedEvent = await this.eventRepository.save(event);
+      return savedEvent;
+    } catch (error) {
+      throw new BadRequestException('Failed to create the event');
+    }
   }
+  
   
 
   async findAll(): Promise<Event[]> {
