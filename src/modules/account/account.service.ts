@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Account } from './entities/account.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AccountDto, UpdateAccountDto } from './dto/account.dto';
+import { AccountDto } from './dto/account.dto';
 import { util } from 'src/util/util';
 
 @Injectable()
@@ -65,15 +65,6 @@ export class AccountService {
       website: account.website,
       address: account.address,
       
-  }});
-};
-  
-
-  async update(id: number, update: UpdateAccountDto) {
-    return await this.accountRepo.update(id, update);
-  }
-
-  async delete(id: number) {
-    return await this.accountRepo.delete(id);
-  }
+    }});
+  };
 }

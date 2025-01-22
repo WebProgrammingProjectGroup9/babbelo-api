@@ -2,7 +2,7 @@ import {
   BadRequestException,
   NotFoundException,
   Injectable,
-  Logger,
+  
 } from '@nestjs/common';
 import { EventDto, UpdateEventDto } from './dto/event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,7 +13,6 @@ import { util } from 'src/util/util';
 
 @Injectable()
 export class EventService {
-  private readonly logger: Logger = new Logger(EventService.name);
 
   constructor(
     @InjectRepository(Event)
@@ -21,7 +20,6 @@ export class EventService {
     @InjectRepository(Account)
     private readonly accountRepository: Repository<Account>,
   ) {
-    this.logger.debug(this.eventRepository.metadata);
   }
 
   async create(req: any, createEventDto: EventDto) {
@@ -43,7 +41,6 @@ export class EventService {
   }
 
   async findAll(): Promise<Event[]> {
-    this.logger.debug('Finding all events');
 
     const events = await this.eventRepository.find({
       relations: ['participants', 'organisator', 'address'],
@@ -69,7 +66,6 @@ export class EventService {
     }
 
     const transformedEvent = util.transformPhotos(event);
-    this.logger.debug(`Finding event with id ${id}`);
     return transformedEvent;
   }
 
@@ -80,56 +76,6 @@ export class EventService {
     });
     const transformedEvent = util.transformPhotos(event);
     return { ...transformedEvent, organisator: event.organisator.id };
-  }
-
-  async update(req: any, id: number, updateEventDto: UpdateEventDto) {
-    const event = await this.eventRepository.findOne({
-      where: { id },
-      relations: ['organisator'],
-    });
-
-    if (!event) {
-      throw new BadRequestException('Event not found');
-    }
-
-    if (new Date(updateEventDto.date) < new Date()) {
-      throw new BadRequestException('Date cannot be in the past');
-    }
-
-    if (event.id !== id) {
-      throw new NotFoundException('Event does not exist');
-    }
-
-    if (event.organisator.id !== req.user.account_id) {
-      throw new BadRequestException('You are not allowed to update this event');
-    }
-
-    const updatedEvent = { ...event, ...updateEventDto };
-
-    return await this.eventRepository.save(updatedEvent);
-  }
-
-  async remove(req: any, id: number) {
-    const event = await this.eventRepository.findOne({
-      where: { id },
-      relations: ['organisator'],
-    });
-
-    if (event.id !== id) {
-      throw new NotFoundException('Event does not exist');
-    }
-
-    if (!event) {
-      throw new NotFoundException('Event not found');
-    }
-
-    if (event.organisator.id !== req.user.account_id) {
-      throw new BadRequestException('You are not allowed to delete this event');
-    }
-
-    const response = await this.eventRepository.delete(id);
-
-    return { deleted: response.affected };
   }
 
   async joinEvent(userId: number, eventId: number) {
