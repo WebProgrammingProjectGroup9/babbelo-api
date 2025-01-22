@@ -6,13 +6,11 @@ import { CreateAddressDto } from './dto/address.dto';
 
 @Injectable()
 export class AddressService {
-    private readonly logger: Logger = new Logger(AddressService.name);
 
     constructor(
         @InjectRepository(Address)
         private readonly addressRepository: Repository<Address>
     ) {
-        this.logger.debug(this.addressRepository.metadata);
     }
 
     async create(address: Address, createAddressDto: CreateAddressDto) {
@@ -31,8 +29,6 @@ export class AddressService {
             throw new NotFoundException('Address does not exist');
         }
 
-        this.logger.debug(`Finding address with id ${id}`);
-        console.log(address);
         return address;
     }
 }

@@ -1,11 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, Put, Logger } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Request } from '@nestjs/common';
 import { EventService } from './event.service';
-import { EventDto, UpdateEventDto } from './dto/event.dto';
+import { EventDto } from './dto/event.dto';
 import { AuthGuard } from '../../auth/auth.guards';
 
 @Controller('event')
 export class EventController {
-  private readonly logger: Logger = new Logger(EventController.name);
 
   constructor(private readonly eventService: EventService) {}
 
@@ -43,18 +42,6 @@ export class EventController {
   @UseGuards(AuthGuard)
   async getSwipe(@Param('id') id: string) {
     return await this.eventService.getSwipe(+id);
-  }
-
-  @Put(':id')
-  @UseGuards(AuthGuard)
-  update(@Request() req: any, @Param('id') id: number, @Body() updateEventDto: UpdateEventDto) {
-    return this.eventService.update(req, id, updateEventDto);
-  }
-
-  @Delete(':id')
-  @UseGuards(AuthGuard)
-  remove(@Request() req: any, @Param('id') id: number) {
-    return this.eventService.remove(req, id);
   }
 
   @Post(':id/join')

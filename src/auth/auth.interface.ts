@@ -22,6 +22,7 @@ export class IAccountRegistration extends IAccountCredentials {
     organisationName?: string;
     chamberOfCommerce?: string;
     website?: string;
+    profileImgUrl: string;
 
     zipCode: string;
     streetName: string;

@@ -1,18 +1,28 @@
-import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  BadRequestException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Account } from 'src/modules/account/entities/account.entity';
 import { Address } from 'src/modules/address/entities/address.entity';
-import { IAccountCredentials, IAccountIdentity, IAccountRegistration } from './auth.interface';
+import {
+  IAccountCredentials,
+  IAccountIdentity,
+  IAccountRegistration,
+} from './auth.interface';
 import { Neo4jService } from 'src/neo4j/neo4j.service';
-
+import { profile } from 'console';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(Account) private readonly accountRepo: Repository<Account>,
-    @InjectRepository(Address) private readonly addressRepo: Repository<Address>,
+    @InjectRepository(Account)
+    private readonly accountRepo: Repository<Account>,
+    @InjectRepository(Address)
+    private readonly addressRepo: Repository<Address>,
     private jwtService: JwtService,
     private neo4jService: Neo4jService,
   ) {}
@@ -43,14 +53,27 @@ export class AuthService {
   }
 
   async register(credentials: IAccountRegistration): Promise<IAccountIdentity> {
-    const { emailAddress, firstName, lastName, password, zipCode, streetName, houseNumber, city } = credentials;
+    const {
+      emailAddress,
+      firstName,
+      lastName,
+      password,
+      zipCode,
+      streetName,
+      houseNumber,
+      city,
+    } = credentials;
 
-    const accountCheck = await this.accountRepo.findOne({ where: { emailAddress } });
+    const accountCheck = await this.accountRepo.findOne({
+      where: { emailAddress },
+    });
     if (accountCheck) {
       throw new BadRequestException('This email address is already in use');
     }
 
-    const addressCheck = await this.addressRepo.findOne({ where: { zipCode, streetName, houseNumber, city } });
+    const addressCheck = await this.addressRepo.findOne({
+      where: { zipCode, streetName, houseNumber, city },
+    });
     let savedAddress: Address;
 
     if (addressCheck) {
@@ -74,6 +97,12 @@ export class AuthService {
     account.gender = credentials.gender;
     account.phoneNumber = credentials.phoneNumber;
     account.address = savedAddress;
+    if (credentials.profileImgUrl) {
+      const base64Data = credentials.profileImgUrl.replace(/^data:image\/jpeg;base64,/,'',);
+      let photoBuffer = Buffer.from(base64Data, 'base64');
+      account.profileImgUrl = photoBuffer;
+    }
+    
 
     if (credentials.organisationName) {
       account['organisationName'] = credentials.organisationName;
@@ -86,7 +115,7 @@ export class AuthService {
     }
 
     const savedAccount = await this.accountRepo.save(account);
-    
+
     this.neo4jService.create(savedAccount.id);
     const payload = { account_id: savedAccount.id };
     const token = this.jwtService.sign(payload);

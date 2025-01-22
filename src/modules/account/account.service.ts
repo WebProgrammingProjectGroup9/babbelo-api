@@ -2,7 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Account } from './entities/account.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AccountDto, UpdateAccountDto } from './dto/account.dto';
+import { AccountDto } from './dto/account.dto';
+import { util } from 'src/util/util';
 
 @Injectable()
 export class AccountService {
@@ -24,7 +25,7 @@ export class AccountService {
       firstName: account.firstName,
       lastName: account.lastName,
       emailAddress: account.emailAddress,
-      profileImgUrl: account.profileImgUrl,
+      profileImgUrl: util.getPhoto(account.profileImgUrl),
       dateOfBirth: account.dateOfBirth,
       gender: account.gender,
       phoneNumber: account.phoneNumber,
@@ -46,12 +47,15 @@ export class AccountService {
     if (!accounts) {
       throw new BadRequestException('No accounts found');
     }
-    return accounts.map((account) => ({
+
+    return accounts.map((account) => {
+
+      return {
       _id: account.id,
       firstName: account.firstName,
       lastName: account.lastName,
       emailAddress: account.emailAddress,
-      profileImgUrl: account.profileImgUrl,
+      profileImgUrl: util.getPhoto(account.profileImgUrl),
       dateOfBirth: account.dateOfBirth,
       gender: account.gender,
       phoneNumber: account.phoneNumber,
@@ -60,15 +64,7 @@ export class AccountService {
       chamberOfCommerce: account.chamberOfCommerce,
       website: account.website,
       address: account.address,
-    }));
-  }
-
-  async update(id: number, update: UpdateAccountDto) {
-    console.log(update);
-    return await this.accountRepo.update(id, update);
-  }
-
-  async delete(id: number) {
-    return await this.accountRepo.delete(id);
-  }
+      
+    }});
+  };
 }
