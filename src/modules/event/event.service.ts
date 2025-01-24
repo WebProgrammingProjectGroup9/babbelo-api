@@ -4,10 +4,10 @@ import {
   Injectable,
   
 } from '@nestjs/common';
-import { EventDto, UpdateEventDto } from './dto/event.dto';
+import { EventDto } from './dto/event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Event } from './entities/event.entity';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Account } from '../account/entities/account.entity';
 import { util } from 'src/util/util';
 import { Address } from '../address/entities/address.entity';
@@ -35,7 +35,6 @@ export class EventService {
       ...eventDetails
     } = createEventDto;
   
-    // Ensure the date is in the future
     if (new Date(date) < new Date()) {
       throw new BadRequestException('Date cannot be in the past');
     }
@@ -47,7 +46,6 @@ export class EventService {
 
     const userId = req.user.account_id;
   
-    // Check if the address exists
     const addressCheck = await this.addressRepo.findOne({
       where: { zipCode, streetName, houseNumber: Number(houseNumber), city },
     });
@@ -65,8 +63,7 @@ export class EventService {
   
       savedAddress = await this.addressRepo.save(address);
     }
-  
-    // Create and save the event
+
     const event = new Event();
     event.date = date;
     event.address = savedAddress;
@@ -152,8 +149,6 @@ export class EventService {
 }
 
 async getTimeline(userId: number) {
-  console.log('userId', userId);
-
   const user = await this.accountRepository.findOne({ where: { id: userId } });
   if (!user) {
       throw new NotFoundException('User not found');
