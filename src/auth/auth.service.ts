@@ -14,7 +14,6 @@ import {
   IAccountRegistration,
 } from './auth.interface';
 import { Neo4jService } from 'src/neo4j/neo4j.service';
-import { profile } from 'console';
 
 @Injectable()
 export class AuthService {

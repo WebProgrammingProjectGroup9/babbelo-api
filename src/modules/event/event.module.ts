@@ -4,7 +4,7 @@ import { EventController } from './event.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Event } from './entities/event.entity';
 import { AuthModule } from '../../auth/auth.module';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { Account } from '../account/entities/account.entity';
 import { Address } from '../address/entities/address.entity';
 

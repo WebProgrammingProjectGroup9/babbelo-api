@@ -1,16 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { config } from 'dotenv';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 
 
 async function bootstrap() {
-  // if (process.env.NODE_ENV !== 'production') {
-  //   config({ path: `.env` });
-  // }
-
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`Database Host: ${process.env.DB_HOST || 'Not Defined'}`);
 
@@ -25,7 +20,6 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
 
-  //app.useGlobalInterceptors(new ApiResponseInterceptor());
   const port = parseInt(process.env.PORT, 10) || 3100;
   await app.listen(port);
   console.log(`Application is running on: http://localhost:${port}`);
